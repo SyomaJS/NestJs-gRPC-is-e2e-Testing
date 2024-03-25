@@ -1,0 +1,71 @@
+syntax = "proto3";
+
+package auth;
+
+service UsersService {
+    rpc CreateUser(CreateUserRequest) returns (User) {}
+    rpc FindAllUsers(Empty) returns (Users) {}
+    rpc FindOneUser(FindOneUserRequest) returns (User) {}
+    rpc UpdateUser(UpdateUserRequest) returns (User) {}
+    rpc RemoveUser(FindOneUserRequest) returns (User) {}
+    rpc LoginUser(LoginUserRequest) returns (LoginResponse) {}
+    rpc LogoutUser(LogoutUserRequest) returns (User) {}
+    rpc QueryUsers(stream PaginationRequest) returns (stream Users) {}
+}
+
+message LoginUserRequest {
+  string login = 1;
+  string password = 2;
+}
+
+message LogoutUserRequest {
+  string refreshToken = 1;
+}
+
+message Tokens {
+  string accessToken = 1;
+  string refreshToken = 2;
+}
+
+message LoginResponse {
+  User user = 1;
+  Tokens tokens = 2;
+}
+
+message PaginationRequest {
+    int32 page = 1;
+    int32 skip = 2;
+}
+
+message UpdateUserRequest {
+    int32 id = 1;
+    string firstName = 2;
+    string lastName = 3;
+    string login = 4;
+}
+
+message FindOneUserRequest {
+    int32 id = 1;
+}
+
+message Users {
+    repeated User users = 1;
+}
+
+message Empty {}
+
+message CreateUserRequest {
+    string firstName = 1;
+    string lastName = 2;
+    string login = 3;
+    string password = 4;
+}
+
+message User {
+    int32 id = 1;
+    string firstName = 2;
+    string lastName = 3;
+    string login = 4;
+    string hashedPassword = 5;
+    bool isActive = 6;
+}

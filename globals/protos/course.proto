@@ -1,0 +1,70 @@
+syntax = "proto3";
+
+package course;
+
+service CourseService {
+    rpc CreateCourse(CreateCourseRequest) returns (Course) {}
+    rpc FindAllCourses(Empty) returns (Courses) {}
+    rpc FindOneCourse(FindOneCourseRequest) returns (Course) {}
+    rpc UpdateCourse(UpdateCourseRequest) returns (Course) {}
+    rpc RemoveCourse(FindOneCourseRequest) returns (Course) {}
+    rpc QueryCourse(stream PaginationRequest) returns (stream Course) {}
+    rpc SetCourseFile (SetCourseFileRequest) returns (SetCourseFileResponse) {}
+    rpc RemoveFilesFromCourse (SetCourseFileRequest) returns (SetCourseFileResponse) {}
+}
+
+message SetCourseFileRequest {
+    int32 courseId = 1;
+    repeated int32 fileIds = 2;
+}
+
+message SetCourseFileResponse {
+    Course course = 1;
+    repeated File files = 2;
+}
+
+message PaginationRequest {
+    int32 page = 1;
+    int32 skip = 2;
+}
+
+message File {
+    int32 id = 1;
+    string fileName = 2;
+}
+
+message CreateCourseRequest {
+    string courseName = 1;
+    int32 price = 2;
+    int32 duration = 3;
+}
+
+message CreateCourseResponse {
+    Course data = 1;
+    int32 errorStatus = 2;
+    string errorMessage = 3;
+}
+
+message UpdateCourseRequest {
+    int32 id = 1;
+    string courseName = 2; 
+    int32 price = 3;
+    int32 duration = 4;
+}
+
+message FindOneCourseRequest {
+    int32 id = 1;
+}
+
+message Course {
+    int32 id = 1;
+    string courseName = 2;
+    int32 price = 3;
+    int32 duration = 4;
+}
+
+message Courses {
+    repeated Course courses = 1;
+}
+
+message Empty {}

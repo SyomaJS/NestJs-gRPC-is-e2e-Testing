@@ -1,0 +1,125 @@
+import { usersStub } from './stubs/users.stub';
+import { JwtService } from '@nestjs/jwt';
+import { UsersController } from '../users.controller';
+import { UsersService } from '../users.service';
+import { Test, TestingModule } from '@nestjs/testing';
+import { User } from '../../../globals/entities/user.entity';
+import {
+  CreateUserRequest,
+  LoginResponse,
+  LoginUserRequest,
+  LogoutUserRequest,
+} from '../../../globals/interfaces/auth';
+import { mockUsersService } from '../__mocks__/users.service';
+
+describe('UsersController', () => {
+  let testingModule: TestingModule;
+  let usersService: UsersService;
+  let usersController: UsersController;
+
+  //?  setup the testing module
+  beforeAll(async () => {
+    testingModule = await Test.createTestingModule({
+      controllers: [UsersController],
+      providers: [
+        {
+          provide: UsersService,
+          useValue: mockUsersService,
+        },
+        JwtService,
+      ],
+    }).compile();
+
+    usersService = testingModule.get<UsersService>(UsersService);
+    usersController = testingModule.get<UsersController>(UsersController);
+  });
+
+  //?  clean all mocks
+  afterAll(async () => {
+    await testingModule.close();
+    usersService = null;
+    usersController = null;
+  });
+
+  //? check if service & controllers defined
+  it('should be defined', () => {
+    expect(usersService).toBeDefined();
+    expect(usersController).toBeDefined();
+  });
+
+  //?  signup user
+  describe('"signup" method', () => {
+    let user: User;
+    let createUserRequest: CreateUserRequest;
+
+    beforeAll(async () => {
+      createUserRequest = {
+        firstName: usersStub().firstName,
+        lastName: usersStub().lastName,
+        login: usersStub().login,
+        password: usersStub().hashedPassword,
+      };
+
+      user = await usersController.signup(createUserRequest);
+    });
+
+    it('should call signup method with correct parameters', () => {
+      expect(usersService.signup).toHaveBeenCalledWith(createUserRequest);
+    });
+
+    it('should return an object of user', () => {
+      expect(user).toEqual(usersStub());
+    });
+  });
+
+  //?  signin user
+  describe('"login" method', () => {
+    let loginResponse: LoginResponse;
+    let loginUserRequest: LoginUserRequest;
+
+    beforeAll(async () => {
+      loginUserRequest = {
+        login: usersStub().login,
+        password: usersStub().hashedPassword,
+      };
+
+      loginResponse = await usersController.login(loginUserRequest);
+    });
+
+    it('should call login method with correct parameters', () => {
+      expect(usersService.login).toHaveBeenCalledWith(loginUserRequest);
+    });
+
+    it('should return a login response object', () => {
+      expect(loginResponse).toEqual({
+        user: usersStub(),
+        tokens: {
+          accessToken: expect.any(String),
+          refreshToken: expect.any(String),
+        },
+      });
+    });
+  });
+
+  //?  signout user
+  describe('"logout" method', () => {
+    let logoutUserRequest: LogoutUserRequest;
+    let user: User;
+
+    beforeAll(async () => {
+      logoutUserRequest = {
+        refreshToken: 'any-string',
+      };
+
+      user = await usersController.logout(logoutUserRequest);
+    });
+
+    it('should call logout method with correct parametrs', () => {
+      expect(usersService.logout).toHaveBeenCalledWith(logoutUserRequest);
+    });
+
+    it('should return a object of user', () => {
+      expect(user).toEqual(usersStub());
+    });
+  });
+});
