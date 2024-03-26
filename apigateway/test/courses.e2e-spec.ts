@@ -1,3 +1,4 @@
+import { COURSE_PACKAGE_NAME } from "./../globals/interfaces/course";
 import { Test, TestingModule } from "@nestjs/testing";
 import { INestApplication } from "@nestjs/common";
 import * as request from "supertest";
@@ -34,36 +35,40 @@ describe("Courses (e2e)", () => {
 
   //? Expecting successful creation of the course
   it("/courses/create (POST) --> SUCCESS -> (201)", async () => {
-    const response = await request(app.getHttpServer())
+    const { body } = await request(app.getHttpServer())
       .post("/courses/create")
       .set("Content-Type", "application/json")
       .send(createCourseDto)
       .expect(201);
+    expect(body.courseName).toEqual(createCourseDto.courseName);
 
-    createdCourseId = response.body.id;
+    createdCourseId = body.id;
   });
 
   //? Expecting successfull finding all courses
   it("/courses/get-all (GET) --> SUCCESS -> (200)", async () => {
-    const response = await request(app.getHttpServer())
+    const { body } = await request(app.getHttpServer())
       .get("/courses/get-all")
       .set("Content-Type", "application/json")
       .expect(200);
 
-    expect(response.body).toBeInstanceOf(Array);
+    expect(body).toBeInstanceOf(Array);
+    expect(body.length).toBeGreaterThan(0);
   });
 
   //? Expecting successfully finding one course
   it("/courses/get/:id (GET) --> SUCCESS -> (200)", async () => {
-    await request(app.getHttpServer())
+    const { body } = await request(app.getHttpServer())
       .get(`/courses/get/${createdCourseId}`)
       .set("Content-Type", "application/json")
       .expect(200);
+
+    expect(body.courseName).toEqual(createCourseDto.courseName);
   });
 
   //? Expecting FAIL while finding one course
   it("/courses/get/:id (GET) --> FAIL -> (404)", async () => {
-    await request(app.getHttpServer())
+    const { body } = await request(app.getHttpServer())
       .get(`/courses/get/${-1}`)
       .set("Content-Type", "application/json")
       .expect(404);
@@ -76,15 +81,15 @@ describe("Courses (e2e)", () => {
       price: 1200,
     };
 
-    const response = await request(app.getHttpServer())
+    const { body } = await request(app.getHttpServer())
       .put(`/courses/update/${createdCourseId}`)
       .set("Content-Type", "application/json")
       .send(updateCourseDto)
       .expect(200);
 
-    expect(response.body.courseName).toEqual(updateCourseDto.courseName);
-    expect(response.body.duration).toEqual(updateCourseDto.duration);
-    expect(response.body.price).toEqual(updateCourseDto.price);
+    expect(body.courseName).toEqual(updateCourseDto.courseName);
+    expect(body.duration).toEqual(updateCourseDto.duration);
+    expect(body.price).toEqual(updateCourseDto.price);
   });
 
   //? Expecting deleting course
