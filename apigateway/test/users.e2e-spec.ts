@@ -4,6 +4,7 @@ import * as request from "supertest";
 import { AppModule } from "../src/app.module";
 import { CreateUserRequest } from "../dist/globals/interfaces/auth.d";
 import * as cookieParser from "cookie-parser";
+import { response } from "express";
 
 describe("User (e2e)", () => {
   let app: INestApplication;
@@ -37,15 +38,30 @@ describe("User (e2e)", () => {
       .send(createUserRequest)
       .expect(201);
 
+    expect(response.body?.login).toEqual(createUserRequest.login);
+
     createdUserId = response.body.id;
   });
 
   // ? Expecting success finding created user
   it("/users/get (GET) --> SUCCESS -> (200)", async () => {
-    await request(app.getHttpServer())
+    const response = await request(app.getHttpServer())
       .get(`/users/get/${createdUserId}`)
       .set("Content-Type", "application/json")
       .expect(200);
+
+    expect(response.body?.login).toEqual(createUserRequest.login);
+  });
+
+  //? Expecting successful retrieval of all users
+  it("/users/get-all (GET) --> SUCCESS -> (200)", async () => {
+    const response = await request(app.getHttpServer())
+      .get("/users/get-all")
+      .set("Content-Type", "application/json")
+      .expect(200);
+
+    expect(response.body).toBeInstanceOf(Array);
+    expect(response.body.length).toBeGreaterThan(0);
   });
 
   //? Expecting a failed sign-up attempt
@@ -59,7 +75,7 @@ describe("User (e2e)", () => {
 
   //? Expecting successful logging in
   it("/users/signin (POST) should log in a user and return tokens", async () => {
-    const response = await request(app.getHttpServer())
+    const { body, headers } = await request(app.getHttpServer())
       .post("/users/signin")
       .set("Content-Type", "application/json")
       .send({
@@ -68,7 +84,12 @@ describe("User (e2e)", () => {
       })
       .expect(200);
 
-    cookie = response.headers["set-cookie"];
+    expect(body.user.login).toEqual(createUserRequest.login);
+
+    expect(body).toHaveProperty("accessToken");
+    expect(body.accessToken).toBeDefined();
+
+    cookie = headers["set-cookie"];
   });
 
   //? Expecting successful logout
@@ -99,16 +120,6 @@ describe("User (e2e)", () => {
         password: "worng_password",
       })
       .expect(401);
-  });
-
-  //? Expecting successful retrieval of all users
-  it("/users/get-all (GET) --> SUCCESS -> (200)", async () => {
-    const response = await request(app.getHttpServer())
-      .get("/users/get-all")
-      .set("Content-Type", "application/json")
-      .expect(200);
-
-    expect(response.body).toBeInstanceOf(Array);
   });
 
   afterAll(async () => {
