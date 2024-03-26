@@ -1,9 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.FirstGenration1711007677077 = void 0;
-class FirstGenration1711007677077 {
+exports.TestMigration1711444405581 = void 0;
+class TestMigration1711444405581 {
     constructor() {
-        this.name = 'FirstGenration1711007677077';
+        this.name = 'TestMigration1711444405581';
     }
     async up(queryRunner) {
         await queryRunner.query(`CREATE TABLE "core"."file" ("id" SERIAL NOT NULL, "fileName" character varying(255) NOT NULL, "filePath" character varying(255) NOT NULL, CONSTRAINT "PK_36b46d232307066b3a2c9ea3a1d" PRIMARY KEY ("id"))`);
@@ -36,5 +36,5 @@ class FirstGenration1711007677077 {
         await queryRunner.query(`DROP TABLE "core"."file"`);
     }
 }
-exports.FirstGenration1711007677077 = FirstGenration1711007677077;
-//# sourceMappingURL=1711007677077-first-genration.js.map
+exports.TestMigration1711444405581 = TestMigration1711444405581;
+//# sourceMappingURL=1711444405581-test-migration.js.map

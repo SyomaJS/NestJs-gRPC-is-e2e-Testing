@@ -1,4 +1,3 @@
-import { COURSE_PACKAGE_NAME } from "./../globals/interfaces/course";
 import { Test, TestingModule } from "@nestjs/testing";
 import { INestApplication } from "@nestjs/common";
 import * as request from "supertest";

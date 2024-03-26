@@ -127,7 +127,8 @@ describe('UsersController', () => {
   });
 
   describe('"findAll" method', () => {
-    let users: IUser[];
+    // let users: IUser[];
+    let users: any;
 
     beforeAll(async () => {
       users = await usersController.findAll();
@@ -156,7 +157,7 @@ describe('UsersController', () => {
     });
 
     it('should call witn proper parametrs', () => {
-      expect(usersService.findOne).toHaveBeenCalledWith(findOneUserRequest);
+      expect(usersService.findOne).toHaveBeenCalledWith(findOneUserRequest.id);
     });
 
     it('should return object of single user', () => {

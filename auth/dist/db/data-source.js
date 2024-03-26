@@ -2,7 +2,14 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.dataSourceOptions = void 0;
 const typeorm_1 = require("typeorm");
-require('dotenv').config();
+if (process.env.NODE_ENV === 'test') {
+    require('dotenv').config({ path: '.env.test' });
+}
+else {
+    require('dotenv').config({ path: '.env' });
+}
+console.log(process.env.NODE_ENV);
+console.log(process.env.TYPEORM_DATABASE);
 exports.dataSourceOptions = {
     type: 'postgres',
     host: process.env.TYPEORM_HOST,

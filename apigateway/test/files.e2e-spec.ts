@@ -20,7 +20,7 @@ describe("Files (e2e)", () => {
     await app.init();
   });
 
-  //? Expecting succes while uploading file
+  // ? Expecting succes while uploading file
   // it("/files/upload (POST) --> SUCCESS -> 201", async () => {
   //   const filePath = path.join(__dirname, "./mocks/testing-file.png");
   //   const { body } = await request(app.getHttpServer())
@@ -31,13 +31,13 @@ describe("Files (e2e)", () => {
   //   createdFileId = body.id;
   // });
 
-  //? Expecting succes while finding all files
-  // it("/files/get-all (GET) --> SUCCESS -> (200)", async () => {
-  //   await request(app.getHttpServer())
-  //     .get("/files/get-all")
-  //     .set("Content-Type", "multipart/form-data")
-  //     .expect(200);
-  // });
+  // ? Expecting succes while finding all files
+  it("/files/get-all (GET) --> SUCCESS -> (200)", async () => {
+    await request(app.getHttpServer())
+      .get("/files/get-all")
+      .set("Content-Type", "multipart/form-data")
+      .expect(200);
+  });
 
   //? Expecting succes while finding a single file by ID
   // it("/files/get/:id (GET) --> SUCCESS -> (200)", async () => {
