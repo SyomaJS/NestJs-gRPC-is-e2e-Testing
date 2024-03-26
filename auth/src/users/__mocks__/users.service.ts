@@ -29,9 +29,11 @@ export const mockUsersService = {
     .mockImplementation((logoutUserRequest: LogoutUserRequest) => {
       return Promise.resolve(usersStub());
     }),
+
   findAll: jest.fn().mockImplementation(() => {
     return Promise.resolve([usersStub()]);
   }),
+
   update: jest
     .fn()
     .mockImplementation((id: string, updateUserRequest: UpdateUserRequest) => {

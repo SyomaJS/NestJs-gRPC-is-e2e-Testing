@@ -1,9 +1,12 @@
+import { FindOneUserRequest } from './../../../globals/interfaces/auth';
 import { usersStub } from './stubs/users.stub';
 import { JwtService } from '@nestjs/jwt';
 import { UsersController } from '../users.controller';
 import { UsersService } from '../users.service';
 import { Test, TestingModule } from '@nestjs/testing';
 import { User } from '../../../globals/entities/user.entity';
+import { User as IUser } from '../../../globals/interfaces/auth';
+
 import {
   CreateUserRequest,
   LoginResponse,
@@ -119,6 +122,44 @@ describe('UsersController', () => {
     });
 
     it('should return a object of user', () => {
+      expect(user).toEqual(usersStub());
+    });
+  });
+
+  describe('"findAll" method', () => {
+    let users: IUser[];
+
+    beforeAll(async () => {
+      users = await usersController.findAll();
+      console.log(users);
+    });
+
+    it('should call find all', () => {
+      expect(usersService.findAll).toHaveBeenCalled();
+    });
+
+    it('should return all users as Array', () => {
+      expect(users).toEqual([usersStub()]);
+    });
+  });
+
+  describe('"findOne" method', () => {
+    let user: User;
+    let findOneUserRequest: FindOneUserRequest;
+
+    beforeAll(async () => {
+      findOneUserRequest = {
+        id: usersStub().id,
+      };
+
+      user = await usersController.findOne(findOneUserRequest);
+    });
+
+    it('should call witn proper parametrs', () => {
+      expect(usersService.findOne).toHaveBeenCalledWith(findOneUserRequest);
+    });
+
+    it('should return object of single user', () => {
       expect(user).toEqual(usersStub());
     });
   });
