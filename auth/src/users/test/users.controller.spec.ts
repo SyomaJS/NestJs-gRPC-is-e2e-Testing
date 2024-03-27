@@ -1,4 +1,4 @@
-import { FindOneUserRequest } from './../../../globals/interfaces/auth';
+import { FindOneUserRequest, UpdateUserRequest } from './../../../globals/interfaces/auth';
 import { usersStub } from './stubs/users.stub';
 import { JwtService } from '@nestjs/jwt';
 import { UsersController } from '../users.controller';
@@ -22,14 +22,17 @@ describe('UsersController', () => {
 
   //?  setup the testing module
   beforeAll(async () => {
+
     testingModule = await Test.createTestingModule({
       controllers: [UsersController],
+
       providers: [
         {
           provide: UsersService,
           useValue: mockUsersService,
         },
         JwtService,
+        
       ],
     }).compile();
 
@@ -46,37 +49,51 @@ describe('UsersController', () => {
 
   //? check if service & controllers defined
   it('should be defined', () => {
+
     expect(usersService).toBeDefined();
     expect(usersController).toBeDefined();
+
   });
 
   //?  signup user
   describe('"signup" method', () => {
+    
     let user: User;
     let createUserRequest: CreateUserRequest;
 
     beforeAll(async () => {
+
       createUserRequest = {
         firstName: usersStub().firstName,
         lastName: usersStub().lastName,
         login: usersStub().login,
         password: usersStub().hashedPassword,
+
       };
 
       user = await usersController.signup(createUserRequest);
+
     });
 
     it('should call signup method with correct parameters', () => {
+
       expect(usersService.signup).toHaveBeenCalledWith(createUserRequest);
+
     });
 
     it('should return an object of user', () => {
+
       expect(user).toEqual(usersStub());
+
     });
+
   });
+
+
 
   //?  signin user
   describe('"login" method', () => {
+
     let loginResponse: LoginResponse;
     let loginUserRequest: LoginUserRequest;
 
@@ -93,7 +110,9 @@ describe('UsersController', () => {
       expect(usersService.login).toHaveBeenCalledWith(loginUserRequest);
     });
 
+
     it('should return a login response object', () => {
+
       expect(loginResponse).toEqual({
         user: usersStub(),
         tokens: {
@@ -101,7 +120,9 @@ describe('UsersController', () => {
           refreshToken: expect.any(String),
         },
       });
+
     });
+    
   });
 
   //?  signout user
@@ -164,4 +185,50 @@ describe('UsersController', () => {
       expect(user).toEqual(usersStub());
     });
   });
+
+  describe('"updateUser" method',() => {
+    let user: User;
+    let updateUserRequest: Pick<UpdateUserRequest, "id" | "firstName">
+
+    beforeAll(async() => {
+
+      updateUserRequest = {
+        id: usersStub().id,
+        firstName: usersStub().firstName + 'updated',
+      }
+
+      user = await usersController.update(updateUserRequest)
+
+    })
+
+    it('should call with proper parametrs and return object of user', () => {
+      expect(usersService.update).toHaveBeenCalledWith(updateUserRequest.id, updateUserRequest);
+      expect(user).toEqual(usersStub())
+    })
+
+
+  })
+  
+  describe('"removeUser" method',() => {
+    let user: User;
+    let findOneUserRequest: FindOneUserRequest;
+
+    beforeAll(async() => {
+
+      findOneUserRequest = {
+        id: usersStub().id,
+      }
+
+      user = await usersController.remove(findOneUserRequest)
+
+    })
+
+    it('should call with proper parametrs and return object of user', () => {
+      expect(usersService.remove).toHaveBeenCalledWith(findOneUserRequest.id);
+      expect(user).toEqual(usersStub())
+    })
+
+
+  })
+
 });

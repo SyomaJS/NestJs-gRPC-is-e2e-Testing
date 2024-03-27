@@ -21,9 +21,9 @@ export interface PaginationRequest {
 }
 export interface UpdateUserRequest {
     id: number;
-    firstName: string;
-    lastName: string;
-    login: string;
+    firstName?: string;
+    lastName?: string;
+    login?: string;
 }
 export interface FindOneUserRequest {
     id: number;

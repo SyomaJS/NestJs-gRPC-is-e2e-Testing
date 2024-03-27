@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.usersStub = void 0;
+exports.tokens = exports.usersStub = void 0;
 const usersStub = () => {
     return {
         id: 1,
@@ -11,4 +11,8 @@ const usersStub = () => {
     };
 };
 exports.usersStub = usersStub;
+exports.tokens = {
+    accessToken: 'testAccessToken',
+    refreshToken: 'testRefreshToken',
+};
 //# sourceMappingURL=users.stub.js.map

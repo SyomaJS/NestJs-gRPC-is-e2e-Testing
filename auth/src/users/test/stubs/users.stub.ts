@@ -9,3 +9,9 @@ export const usersStub = (): Partial<User> => {
     isActive: true,
   };
 };
+
+
+export const tokens = {
+        accessToken: 'testAccessToken',
+        refreshToken: 'testRefreshToken',
+};

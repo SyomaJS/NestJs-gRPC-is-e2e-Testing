@@ -8,8 +8,6 @@ if (process.env.NODE_ENV === 'test') {
 else {
     require('dotenv').config({ path: '.env' });
 }
-console.log(process.env.NODE_ENV);
-console.log(process.env.TYPEORM_DATABASE);
 exports.dataSourceOptions = {
     type: 'postgres',
     host: process.env.TYPEORM_HOST,
