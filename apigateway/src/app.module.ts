@@ -5,7 +5,6 @@ import { ServeStaticModule } from "@nestjs/serve-static";
 import { UsersModule } from "./users/users.module";
 import { resolve } from "path";
 
-console.log(process.env.NODE_ENV);
 
 @Module({
   imports: [

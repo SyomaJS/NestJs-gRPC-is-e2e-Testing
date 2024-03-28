@@ -13,7 +13,6 @@ const courses_module_1 = require("./courses/courses.module");
 const serve_static_1 = require("@nestjs/serve-static");
 const users_module_1 = require("./users/users.module");
 const path_1 = require("path");
-console.log(process.env.NODE_ENV);
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;

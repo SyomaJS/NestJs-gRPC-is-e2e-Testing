@@ -37,7 +37,6 @@ export class FilesService {
 
   async findAll(): Promise<{ files: File[] }> {
     const files = await this.fileRepository.find();
-    console.log(`Files: `, files);
     return { files };
   }
 

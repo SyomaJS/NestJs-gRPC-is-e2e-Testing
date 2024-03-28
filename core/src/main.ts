@@ -15,11 +15,13 @@ async function startCore() {
           join(__dirname, '../protos/file.proto'),
           join(__dirname, '../protos/course.proto'),
         ],
+        maxReceiveMessageLength: 100 * 1024 * 1024, 
+        maxSendMessageLength: 100 * 1024 * 1024, 
       },
     },
   );
 
-  app.listen();
+  await app.listen();
 }
 
 startCore();

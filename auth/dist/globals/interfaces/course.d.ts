@@ -25,9 +25,9 @@ export interface CreateCourseResponse {
 }
 export interface UpdateCourseRequest {
     id: number;
-    courseName: string;
-    price: number;
-    duration: number;
+    courseName?: string;
+    price?: number;
+    duration?: number;
 }
 export interface FindOneCourseRequest {
     id: number;
