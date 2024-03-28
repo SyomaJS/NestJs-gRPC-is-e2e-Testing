@@ -11,7 +11,7 @@ async function bootstrap() {
     app.useGlobalPipes(new common_1.ValidationPipe());
     (0, class_validator_1.useContainer)(app.select(app_module_1.AppModule), { fallbackOnErrors: true });
     await app.listen(3000, () => {
-        console.log("Listening on 3000 port");
+        console.log("Listening on port 3000");
     });
 }
 bootstrap();
