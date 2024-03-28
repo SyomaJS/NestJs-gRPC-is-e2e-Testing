@@ -3,15 +3,16 @@ import {
   CreateFileRequest,
   FindOneFileRequest,
   UpdateFileRequest,
-} from '../../globals/interfaces/file';
+} from '../../../globals/interfaces/file';
 import { InjectRepository } from '@nestjs/typeorm';
 import { In, Repository } from 'typeorm';
-import { File } from '../../globals/entities/file.entity';
+import { File } from '../../../globals/entities/file.entity';
 import { RpcException } from '@nestjs/microservices';
 import * as grpc from '@grpc/grpc-js';
 import * as path from 'path';
 import * as uuid from 'uuid';
 import * as fs from 'fs';
+
 @Injectable()
 export class FilesService {
   constructor(
@@ -21,7 +22,6 @@ export class FilesService {
   async create(createFileRequest: CreateFileRequest) {
     try {
       const { file } = createFileRequest;
-      console.log(file instanceof Buffer);
 
       const newFile = await this.createFileReturnName(file, createFileRequest);
 

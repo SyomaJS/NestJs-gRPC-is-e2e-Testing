@@ -17,22 +17,22 @@ import * as bcrypt from 'bcrypt';
 import { MockedFunction } from 'jest-mock';
 
 describe('UsersService', () => {
+  
   let app: TestingModule;
   let usersService: UsersService;
   let mockCompare: any;
 
   const mockUsersRepository = {
-    create: jest
-      .fn()
-      .mockImplementation((createUserRequest: CreateUserRequest) => {
+    create: jest.fn().mockImplementation((createUserRequest: CreateUserRequest) => {
         return createUserRequest;
-      }),
+    }),
 
     save: jest.fn().mockImplementation((user: User) => {
       return user;
     }),
 
     findOneBy: jest.fn().mockImplementation((conditions: any) => {
+
       if (conditions.login === usersStub().login) {
         return Promise.resolve(usersStub());
       } else if (conditions.id === usersStub().id) {
@@ -98,24 +98,30 @@ describe('UsersService', () => {
   });
 
   describe('"findAll" method', () => {
+
     it('should return all users', async () => {
       const users = [usersStub()];
 
       const result = await usersService.findAll();
 
       expect(result).toEqual({ users });
+
     });
+
   });
 
   describe('"findOne" method', () => {
+
     it('should return user by id', () => {
       const userId = usersStub().id;
 
       expect(usersService.findOne(userId)).resolves.toEqual(usersStub());
     });
+
   });
 
   describe('"signup" method', () => {
+
     it('should create new user', async () => {
       const createUserRequest: CreateUserRequest = {
         login: 'newuser',
@@ -127,6 +133,7 @@ describe('UsersService', () => {
       const newUser = await usersService.signup(createUserRequest);
 
       expect(newUser).toMatchObject(createUserRequest);
+
     });
 
     it('should throw an error if login already in use', async () => {
@@ -141,9 +148,11 @@ describe('UsersService', () => {
         RpcException,
       );
     });
+
   });
 
   describe('"logout" method', () => {
+
     it('should logout user', async () => {
       const logoutUserRequest: LogoutUserRequest = {
         refreshToken: 'dummyRefreshToken',
@@ -172,6 +181,7 @@ describe('UsersService', () => {
   });
 
   describe('"login" method', () => {
+
     it('should login user', async () => {
       const loginUserRequest: LoginUserRequest = {
         login: usersStub().login,
@@ -198,6 +208,7 @@ describe('UsersService', () => {
   });
 
   describe('"remove" method', () => {
+
     it('should remove user', async () => {
       const removedUser = await usersService.remove(usersStub().id);
 

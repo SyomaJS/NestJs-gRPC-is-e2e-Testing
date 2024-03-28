@@ -16,33 +16,32 @@ export interface FindOneFileRequest {
     id: number;
 }
 export interface Files {
-    file: File[];
+    files: File[];
 }
 export interface Empty {
 }
 export interface CreateFileRequest {
     fileName: string;
-    file: any;
+    file: Uint8Array;
     fileType: string;
 }
 export interface File {
     id: number;
     fileName: string;
+    filePath: string;
 }
 export declare const FILE_PACKAGE_NAME = "file";
 export interface FileServiceClient {
     createFile(request: CreateFileRequest): Observable<File>;
-    findAllFiles(request: Empty): Observable<{
-        files: File[];
-    }>;
+    findAllFiles(request: Empty): Observable<Files>;
     findOneFile(request: FindOneFileRequest): Observable<File>;
     updateFile(request: UpdateFileRequest): Observable<File>;
     removeFile(request: FindOneFileRequest): Observable<File>;
     queryFile(request: Observable<PaginationRequest>): Observable<File>;
 }
 export interface FileServiceController {
-    createFile(request: CreateFileRequest): Promise<CreateFileResponse> | Observable<CreateFileResponse> | CreateFileResponse;
-    findAllFiles(request: Empty): Promise<File> | Observable<File> | File;
+    createFile(request: CreateFileRequest): Promise<File> | Observable<File> | File;
+    findAllFiles(request: Empty): Promise<Files> | Observable<Files> | Files;
     findOneFile(request: FindOneFileRequest): Promise<File> | Observable<File> | File;
     updateFile(request: UpdateFileRequest): Promise<File> | Observable<File> | File;
     removeFile(request: FindOneFileRequest): Promise<File> | Observable<File> | File;

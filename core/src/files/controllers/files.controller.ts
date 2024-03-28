@@ -1,14 +1,12 @@
 import { Controller } from '@nestjs/common';
 import { GrpcMethod, Payload } from '@nestjs/microservices';
-import { FilesService } from './files.service';
+import { FilesService } from '../services/files.service';
 import {
   CreateFileRequest,
-  CreateFileResponse,
   FILE_SERVICE_NAME,
   FindOneFileRequest,
   UpdateFileRequest,
-} from '../../globals/interfaces/file';
-import { Observable, of } from 'rxjs';
+} from '../../../globals/interfaces/file';
 
 @Controller()
 export class FilesController {
@@ -19,18 +17,7 @@ export class FilesController {
     console.log(`CreateFileRequest: ${createFileRequest}`);
     return this.filesService.create(createFileRequest);
   }
-  // createFile(
-  //   fileBuffer: Buffer,
-  //   fileType: string,
-  // ): Observable<CreateFileResponse> {
-  //   const createFileRequest: Observable<CreateFileRequest> = of({
-  //     file: fileBuffer,
-  //     fileType: fileType,
-  //   });
-
-  //   return this.filesService.create(createFileRequest);
-  // }
-
+  
   @GrpcMethod(FILE_SERVICE_NAME, 'findAllFiles')
   findAll() {
     return this.filesService.findAll();
@@ -50,4 +37,16 @@ export class FilesController {
   remove(@Payload() findOneRequest: FindOneFileRequest) {
     return this.filesService.remove(findOneRequest);
   }
+
+  // createFile(
+  //   fileBuffer: Buffer,
+  //   fileType: string,
+  // ): Observable<CreateFileResponse> {
+  //   const createFileRequest: Observable<CreateFileRequest> = of({
+  //     file: fileBuffer,
+  //     fileType: fileType,
+  //   });
+
+  //   return this.filesService.create(createFileRequest);
+  // }
 }

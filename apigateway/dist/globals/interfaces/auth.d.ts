@@ -3,10 +3,6 @@ export declare const protobufPackage = "auth";
 export interface LogoutUserRequest {
     refreshToken: string;
 }
-export interface LoginUserRequest {
-    login: string;
-    password: string;
-}
 export interface Tokens {
     accessToken: string;
     refreshToken: string;
@@ -21,9 +17,9 @@ export interface PaginationRequest {
 }
 export interface UpdateUserRequest {
     id: number;
-    firstName?: string;
-    lastName?: string;
-    login?: string;
+    firstName: string;
+    lastName: string;
+    login: string;
 }
 export interface FindOneUserRequest {
     id: number;
@@ -54,7 +50,7 @@ export interface UsersServiceClient {
     findOneUser(request: FindOneUserRequest): Observable<User>;
     updateUser(request: UpdateUserRequest): Observable<User>;
     removeUser(request: FindOneUserRequest): Observable<User>;
-    loginUser(request: LoginUserRequest): Observable<LoginResponse>;
+    loginUser(request: CreateUserRequest): Observable<LoginResponse>;
     logoutUser(request: LogoutUserRequest): Observable<User>;
     queryUsers(request: Observable<PaginationRequest>): Observable<Users>;
 }
@@ -64,7 +60,7 @@ export interface UsersServiceController {
     findOneUser(request: FindOneUserRequest): Promise<User> | Observable<User> | User;
     updateUser(request: UpdateUserRequest): Promise<User> | Observable<User> | User;
     removeUser(request: FindOneUserRequest): Promise<User> | Observable<User> | User;
-    loginUser(request: LoginUserRequest): Promise<LoginResponse> | Observable<LoginResponse> | LoginResponse;
+    loginUser(request: CreateUserRequest): Promise<LoginResponse> | Observable<LoginResponse> | LoginResponse;
     logoutUser(request: LogoutUserRequest): Promise<User> | Observable<User> | User;
     queryUsers(request: Observable<PaginationRequest>): Observable<Users>;
 }

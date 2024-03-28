@@ -11,8 +11,8 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Course = void 0;
 const typeorm_1 = require("typeorm");
-const file_entity_1 = require("./file.entity");
 const user_entity_1 = require("./user.entity");
+const file_entity_1 = require("./file.entity");
 let Course = class Course {
 };
 exports.Course = Course;
@@ -21,15 +21,15 @@ __decorate([
     __metadata("design:type", Number)
 ], Course.prototype, "id", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ type: 'varchar', length: 255, nullable: false }),
+    (0, typeorm_1.Column)({ type: "varchar", length: 255, nullable: false }),
     __metadata("design:type", String)
 ], Course.prototype, "courseName", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ type: 'int', nullable: false }),
+    (0, typeorm_1.Column)({ type: "int", nullable: false }),
     __metadata("design:type", Number)
 ], Course.prototype, "price", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ type: 'int', nullable: false }),
+    (0, typeorm_1.Column)({ type: "int", nullable: false }),
     __metadata("design:type", Number)
 ], Course.prototype, "duration", void 0);
 __decorate([
@@ -41,6 +41,6 @@ __decorate([
     __metadata("design:type", Array)
 ], Course.prototype, "users", void 0);
 exports.Course = Course = __decorate([
-    (0, typeorm_1.Entity)({ name: 'courses', schema: 'core' })
+    (0, typeorm_1.Entity)({ name: "courses", schema: "core" })
 ], Course);
 //# sourceMappingURL=course.entity.js.map

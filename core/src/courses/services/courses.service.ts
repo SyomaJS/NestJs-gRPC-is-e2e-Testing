@@ -10,7 +10,7 @@ import {
   UpdateCourseRequest,
 } from '../../../globals/interfaces/course';
 import { INTERNAL_SERVER_ERROR } from '../../../globals/errors/error-messages';
-import { FilesService } from '../../files/files.service';
+import { FilesService } from '../../files/services/files.service';
 import { RpcException } from '@nestjs/microservices';
 import * as grpc from '@grpc/grpc-js';
 
@@ -146,7 +146,7 @@ export class CoursesService {
         message: 'Course not found',
       });
     }
-    
+
     const existingFileIds = course.files.map((file) => file.id);
     const missingFileIds = fileIds.filter(
       (fileId) => !existingFileIds.includes(fileId),

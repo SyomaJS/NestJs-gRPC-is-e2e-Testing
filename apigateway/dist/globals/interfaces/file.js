@@ -6,13 +6,7 @@ exports.protobufPackage = "file";
 exports.FILE_PACKAGE_NAME = "file";
 function FileServiceControllerMethods() {
     return function (constructor) {
-        const grpcMethods = [
-            "createFile",
-            "findAllFiles",
-            "findOneFile",
-            "updateFile",
-            "removeFile",
-        ];
+        const grpcMethods = ["createFile", "findAllFiles", "findOneFile", "updateFile", "removeFile"];
         for (const method of grpcMethods) {
             const descriptor = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
             (0, microservices_1.GrpcMethod)("FileService", method)(constructor.prototype[method], method, descriptor);
