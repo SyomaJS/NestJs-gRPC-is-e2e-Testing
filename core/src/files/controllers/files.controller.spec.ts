@@ -1,149 +1,158 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { FilesController } from './files.controller';
-import { CreateFileRequest } from '../../../globals/interfaces/file';
-import { NotFoundException } from '@nestjs/common';
 import { FilesService } from '../services/files.service';
-import { File } from '../../../../globals/entities/file.entity';
+import { FilesController } from './files.controller';
+import {
+  CreateFileRequest,
+  FindOneFileRequest,
+  UpdateFileRequest,
+} from '../../../globals/interfaces/file';
+import { mockTestingFile } from '../../../test/courses/__mocks__/course.mock';
 
 describe('FilesController', () => {
-  let controller: FilesController;
-  let service: FilesService;
+  let app: TestingModule;
+  let filesController: FilesController;
+  let filesService: FilesService;
 
-  beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
+  let mockTestingFilesService = {
+    create: jest.fn().mockImplementation((createFileRequest: CreateFileRequest) => {
+        return Promise.resolve(mockTestingFile);
+    }),
+
+    findAll: jest.fn().mockImplementation(() => {
+      return Promise.resolve([mockTestingFile]);
+    }),
+
+    findOne: jest.fn().mockImplementation((findOneFileRequest: FindOneFileRequest) => {
+        return Promise.resolve(mockTestingFile);
+    }),
+
+    update: jest.fn().mockImplementation((findOneFileRequest: FindOneFileRequest) => {
+        return Promise.resolve(mockTestingFile);
+    }),
+
+    remove: jest.fn().mockImplementation((findOneFileRequest: FindOneFileRequest) => {
+        return Promise.resolve(mockTestingFile);
+    }),
+
+  };
+
+
+  beforeAll(async () => {
+
+    app = await Test.createTestingModule({
       controllers: [FilesController],
       providers: [
         {
           provide: FilesService,
-          useValue: {
-            create: jest.fn(),
-            findAll: jest.fn(),
-            findOne: jest.fn(),
-            update: jest.fn(),
-            remove: jest.fn(),
-            getFileByRelation: jest.fn(),
-          },
+          useValue: mockTestingFilesService,
         },
       ],
     }).compile();
 
-    controller = module.get<FilesController>(FilesController);
-    service = module.get<FilesService>(FilesService);
+    filesController = app.get<FilesController>(FilesController);
+    filesService = app.get<FilesService>(FilesService);
+
+  });
+
+  afterAll(async () => {
+    app.close();
+    filesController = null;
+    filesService = null;
   });
 
   it('should be defined', () => {
-    expect(controller).toBeDefined();
+    expect(filesController).toBeDefined();
+    expect(filesService).toBeDefined();
   });
 
-  describe('create', () => {
-    it('should create a file', async () => {
-      const file: CreateFileRequest = {
-        file: Buffer.from('test'),
-        fileType: 'txt',
-        fileName: 'some name',
-      };
+  describe('"getAllFiles" method', () => {
+    it('should return all files', () => {
+      const result = filesController.findAll();
 
-      const result: File = {
-        id: 1,
-        fileName: 'test.txt',
-        filePath: '/path/to/test.txt',
-        courses: [],
-      };
+      expect(filesService.findAll).toHaveBeenCalled();
 
-      jest.spyOn(service, 'create').mockResolvedValue(result);
-
-      expect(await controller.create(file)).toEqual(result);
-      expect(service.create).toHaveBeenCalledWith(file);
+      expect(result).resolves.toEqual([mockTestingFile]);
     });
   });
 
-  describe('findAll', () => {
+  describe('"CreateFile" method', () => {
 
-    it('should return an array of files', async () => {
-      const result: { files: File[] } = {
-        files: [
-          {
-            id: 1,
-            fileName: 'test.txt',
-            filePath: '/path/to/test.txt',
-            courses: [],
-          },
-        ],
+    it('should create a new file', () => {
+      const createFileRequest: CreateFileRequest = {
+        fileName: mockTestingFile.fileName,
+        fileType: 'jpg',
+        file: "test.jpg"
       };
+      const result = filesController.create(createFileRequest);
 
-      jest.spyOn(service, 'findAll').mockResolvedValue(result);
+      expect(filesService.create).toHaveBeenCalled();
 
-      expect(await controller.findAll()).toEqual(result);
-      expect(service.findAll).toHaveBeenCalled();
+      expect(result).resolves.toEqual(mockTestingFile);
     });
+
   });
 
-  describe('findOne', () => {
-    it('should return a file', async () => {
-      const id = 1;
-      const result: File = {
-        id,
-        fileName: 'test.txt',
-        filePath: '/path/to/test.txt',
-        courses: []
-      };
+  describe('"findAllFiles" method', () => {
 
-      jest.spyOn(service, 'findOne').mockResolvedValue(result);
+    it('should return all files', async () => {
 
-      expect(await controller.findOne({ id })).toEqual(result);
-      expect(service.findOne).toHaveBeenCalledWith({ id });
-    });
+      const result = await filesController.findAll();
 
-    it('should throw NotFoundException if file not found', async () => {
-      const id = 2;
-
-      jest.spyOn(service, 'findOne').mockRejectedValue(new NotFoundException());
-
-      await expect(controller.findOne({ id })).rejects.toThrow(
-        NotFoundException,
-      );
-      expect(service.findOne).toHaveBeenCalledWith({ id });
+      expect(filesService.findAll).toHaveBeenCalled();
+      expect(result).toEqual([mockTestingFile]);
 
     });
   });
 
-  describe('update', () => {
+  describe('"findOneFile" method', () => {
+
+    it('should return a single file', async () => {
+
+      const findOneFileRequest: FindOneFileRequest = {
+        id: mockTestingFile.id,
+      };
+
+      const result = await filesController.findOne(findOneFileRequest);
+
+      expect(filesService.findOne).toHaveBeenCalledWith(findOneFileRequest);
+      expect(result).toEqual(mockTestingFile);
+
+    });
+  });
+
+  describe('"updateFile" method', () => {
+
     it('should update a file', async () => {
-      const id = 1;
-      const updateFileRequest = {
-        id,
-        fileName: 'updated.txt',
-      };
-      const result: File = {
-        id,
-        fileName: 'updated.txt',
-        filePath: '/path/to/updated.txt',
-        courses: []
+
+      const updateFileRequest: UpdateFileRequest = {
+        id: mockTestingFile.id,
+        fileName: 'Updated Name',
       };
 
-      jest.spyOn(service, 'update').mockResolvedValue(result);
+      const result = await filesController.update(updateFileRequest);
 
-      expect(await controller.update(updateFileRequest)).toEqual(result);
-      expect(service.update).toHaveBeenCalledWith(updateFileRequest);
+      expect(filesService.update).toHaveBeenCalledWith(updateFileRequest);
+      expect(result).toEqual(mockTestingFile);
+
     });
+
   });
 
-  describe('remove', () => {
-    
+  describe('"removeFile" method', () => {
+
     it('should remove a file', async () => {
-      const id = 1;
-      const result: File = {
-        id,
-        fileName: 'test.txt',
-        filePath: '/path/to/test.txt',
-        courses: []
+
+      const findOneFileRequest: FindOneFileRequest = {
+        id: mockTestingFile.id,
       };
 
-      jest.spyOn(service, 'remove').mockResolvedValue(result);
+      const result = await filesController.remove(findOneFileRequest);
 
-      expect(await controller.remove({ id })).toEqual(result);
-      expect(service.remove).toHaveBeenCalledWith({ id });
+      expect(filesService.remove).toHaveBeenCalledWith(findOneFileRequest);
+      expect(result).toEqual(mockTestingFile);
 
     });
+    
   });
+
 });

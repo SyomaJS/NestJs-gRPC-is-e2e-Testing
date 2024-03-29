@@ -5,7 +5,7 @@ export const mockTestingFile: File = {
   id: 1,
   fileName: 'Some file Name',
   filePath: 'some path',
-  courses: []
+  courses: [],
 };
 
 export const mockTestingCourse: Partial<Course> = {

@@ -49,7 +49,6 @@ export class FilesService {
     try {
       const fileName = uuid.v4() + `.${fileType}`;
       const filepath = path.resolve(__dirname, '../../../globals', 'media');
-      console.log(`File Path: `, filepath);
 
       if (!fs.existsSync(filepath)) {
         fs.mkdirSync(filepath, { recursive: true });

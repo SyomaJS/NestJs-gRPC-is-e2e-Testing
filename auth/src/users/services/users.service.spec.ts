@@ -2,7 +2,6 @@ import {
   CreateUserRequest,
   LoginUserRequest,
   LogoutUserRequest,
-  UpdateUserRequest,
 } from '../../../globals/interfaces/auth';
 import { Test, TestingModule } from '@nestjs/testing';
 import { UsersService } from './users.service';
@@ -63,6 +62,7 @@ describe('UsersService', () => {
   };
 
   beforeAll(async () => {
+
     app = await Test.createTestingModule({
       providers: [
         UsersService,
@@ -83,9 +83,8 @@ describe('UsersService', () => {
 
     usersService = app.get<UsersService>(UsersService);
 
-    mockCompare = jest.spyOn(bcrypt, 'compare') as MockedFunction<
-      typeof bcrypt.compare
-    >;
+    mockCompare = jest.spyOn(bcrypt, 'compare') as MockedFunction<typeof bcrypt.compare>;
+
   });
 
   it('Services should be defined', () => {
@@ -123,6 +122,7 @@ describe('UsersService', () => {
   describe('"signup" method', () => {
 
     it('should create new user', async () => {
+
       const createUserRequest: CreateUserRequest = {
         login: 'newuser',
         password: 'password',
@@ -137,6 +137,7 @@ describe('UsersService', () => {
     });
 
     it('should throw an error if login already in use', async () => {
+
       const createUserRequest: CreateUserRequest = {
         login: usersStub().login,
         password: 'password',
@@ -144,9 +145,7 @@ describe('UsersService', () => {
         lastName: 'User',
       };
 
-      await expect(usersService.signup(createUserRequest)).rejects.toThrow(
-        RpcException,
-      );
+      await expect(usersService.signup(createUserRequest)).rejects.toThrow(RpcException);
     });
 
   });
@@ -158,25 +157,24 @@ describe('UsersService', () => {
         refreshToken: 'dummyRefreshToken',
       };
 
-      jest
-        .spyOn(mockJwtService, 'decode')
-        .mockReturnValue({ id: usersStub().id });
+      jest.spyOn(mockJwtService, 'decode').mockReturnValue({ id: usersStub().id });
 
       const result = await usersService.logout(logoutUserRequest);
 
       expect(result).toEqual(usersStub());
+
     });
 
     it('should throw an error if token is invalid', async () => {
       const logoutUserRequest: LogoutUserRequest = {
         refreshToken: 'invalidToken',
       };
+
       jest.spyOn(mockJwtService, 'decode').mockImplementation(() => ({
         decode: jest.fn().mockReturnValue(null),
       }));
-      await expect(usersService.logout(logoutUserRequest)).rejects.toThrow(
-        RpcException,
-      );
+
+      await expect(usersService.logout(logoutUserRequest)).rejects.toThrow(RpcException);
     });
   });
 

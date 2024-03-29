@@ -1,9 +1,13 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { CoursesService } from '../services/courses.service';
 import { CoursesController } from './courses.controller';
-import { CreateCourseRequest, FindOneCourseRequest, SetCourseFileRequest, UpdateCourseRequest } from '../../../globals/interfaces/course';
+import {
+  CreateCourseRequest,
+  FindOneCourseRequest,
+  SetCourseFileRequest,
+  UpdateCourseRequest,
+} from '../../../globals/interfaces/course';
 import { mockTestingCourse } from '../../../test/courses/__mocks__/course.mock';
-
 
 describe('CoursesController', () => {
   let app: TestingModule;
@@ -104,20 +108,16 @@ describe('CoursesController', () => {
   });
 
   describe('"findAllCourses" method', () => {
-
     it('should return all courses', async () => {
       const result = await coursesController.findAll();
 
       expect(coursesService.findAll).toHaveBeenCalled();
       expect(result).toEqual([mockTestingCourse]);
     });
-
   });
 
   describe('"findOneCourse" method', () => {
-
     it('should return a single course', async () => {
-
       const findOneCourseRequest: FindOneCourseRequest = {
         id: mockTestingCourse.id,
       };
@@ -125,16 +125,11 @@ describe('CoursesController', () => {
 
       expect(coursesService.findOne).toHaveBeenCalledWith(findOneCourseRequest);
       expect(result).toEqual(mockTestingCourse);
-
     });
-
   });
 
-
   describe('"updateCourse" method', () => {
-    
     it('should update a course', async () => {
-
       const updateCourseRequest: UpdateCourseRequest = {
         id: mockTestingCourse.id,
         courseName: 'Updated Name',
@@ -149,11 +144,8 @@ describe('CoursesController', () => {
     });
   });
 
-
   describe('"removeCourse" method', () => {
-
     it('should remove a course', async () => {
-
       const findOneCourseRequest: FindOneCourseRequest = {
         id: mockTestingCourse.id,
       };
@@ -161,16 +153,11 @@ describe('CoursesController', () => {
 
       expect(coursesService.remove).toHaveBeenCalledWith(findOneCourseRequest);
       expect(result).toEqual(mockTestingCourse);
-
     });
-
   });
 
-
   describe('"addFilesToCourse" method', () => {
-    
     it('should add files to a course', async () => {
-
       const setCourseFileRequest: SetCourseFileRequest = {
         courseId: mockTestingCourse.id,
         fileIds: [1, 2, 3],
@@ -182,34 +169,22 @@ describe('CoursesController', () => {
       expect(coursesService.addFilesToCourse).toHaveBeenCalled();
 
       expect(result).toEqual({ course: mockTestingCourse, files: [] });
-
     });
-
   });
 
-
-
   describe('"removeFilesFromCourse" method', () => {
-
     it('should remove files from a course', async () => {
-
       const setCourseFileRequest: SetCourseFileRequest = {
         courseId: mockTestingCourse.id,
         fileIds: [1, 2],
       };
 
-      const result = await coursesController.removeFilesFromCourse(setCourseFileRequest);
+      const result =
+        await coursesController.removeFilesFromCourse(setCourseFileRequest);
 
       expect(coursesService.removeFilesFromCourse).toHaveBeenCalled();
 
       expect(result).toEqual({ course: mockTestingCourse, files: [] });
     });
-
   });
-
-
-
-
-
-
 });
